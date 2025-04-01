@@ -28,7 +28,7 @@ async function getPayPalAccessToken() {
 }
 
 // Route pour créer un ordre avec montant optionnel
-app.get('/createOrder/:intent/:amount?', async (req, res) => {
+app.all('/createOrder/:intent/:amount?', async (req, res) => {
   try {
     let intentToSend;
 
