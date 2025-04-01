@@ -15,7 +15,7 @@
    ```bash
    npm install
    ```
-   
+
 ## Usage
 
 1. Start the server:
@@ -66,6 +66,17 @@
   }
 }
 ```
+
+## Additional options
+
+- Custom amount : add /xxxx where xxxx is the amount
+
+For instance, 105 EUR :
+
+   ```
+   http://localhost:5501/createOrder/iWantCapture/10500
+   ```
+
 
 ## Important Notes
 
