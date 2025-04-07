@@ -90,6 +90,67 @@ app.all('/createOrder/:intent/:amount?', async (req, res) => {
   }
 });
 
+
+app.all('/getOrder/:orderId', async (req, res) => {
+  try {
+    let orderIdToSend = req.params.orderId;
+
+    const accessToken = await getPayPalAccessToken();
+
+    const response = await axios({
+      method: 'get',
+      url: `${process.env.PAYPAL_API_URL}/v2/checkout/orders/${orderIdToSend}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    res.json({
+      status: 'success',
+      order: response.data
+    });
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l\'ordre:', error.message);
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// Capture / Authorize
+app.all('/actionOrder/:orderId/:intent', async (req, res) => {
+  try {
+    let orderIdToSend = req.params.orderId;
+    let intentToSend = req.params.intent;
+
+    const accessToken = await getPayPalAccessToken();
+
+    const response = await axios({
+      method: 'post',
+      url: `${process.env.PAYPAL_API_URL}/v2/checkout/orders/${orderIdToSend}/${intentToSend}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    res.json({
+      status: 'success',
+      order: response.data
+    });
+  } catch (error) {
+    console.error('Erreur lors de la capture/authorisation de l\'ordre:', error.message);
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+
+
 // Route racine pour vérifier que le serveur fonctionne
 app.get('/', (req, res) => {
   res.send('Serveur PayPal fonctionnel. Utilisez /createOrder/iWantCapture pour créer un ordre.');
